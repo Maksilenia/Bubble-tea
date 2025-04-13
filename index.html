@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Пузырьковый сайт</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #1a1a2e, #16213e);
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+        
+        .container {
+            position: relative;
+            width: 100%;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 1;
+        }
+        
+        .header {
+            color: white;
+            text-align: center;
+            margin-bottom: 30px;
+            z-index: 10;
+        }
+        
+        .bubble {
+            position: absolute;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            text-align: center;
+            color: white;
+            font-weight: bold;
+            text-decoration: none;
+            overflow: hidden;
+            backdrop-filter: blur(5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        }
+        
+        .bubble:hover {
+            transform: scale(1.1);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+        }
+        
+        .bubble-content {
+            padding: 20px;
+            z-index: 2;
+        }
+        
+        .footer {
+            position: fixed;
+            bottom: 20px;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 12px;
+            z-index: 10;
+        }
+        
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0) rotate(0deg);
+            }
+            50% {
+                transform: translateY(-20px) rotate(2deg);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Добро пожаловать в пузырьковый мир</h1>
+            <p>Нажимайте на пузырьки для перехода по ссылкам</p>
+        </div>
+        
+        <!-- Пузырьки будут созданы через JavaScript -->
+        
+        <div class="footer">
+            © 2023 Пузырьковый сайт | Все права защищены
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const container = document.querySelector('.container');
+            const colors = [
+                'rgba(255, 107, 107, 0.7)',
+                'rgba(255, 159, 67, 0.7)',
+                'rgba(254, 202, 87, 0.7)',
+                'rgba(29, 209, 161, 0.7)',
+                'rgba(72, 219, 251, 0.7)',
+                'rgba(120, 111, 166, 0.7)',
+                'rgba(225, 112, 85, 0.7)'
+            ];
+            
+            const links = [
+                { title: 'О нас', url: '#about', size: 120 },
+                { title: 'Услуги', url: '#services', size: 150 },
+                { title: 'Портфолио', url: '#portfolio', size: 140 },
+                { title: 'Блог', url: '#blog', size: 100 },
+                { title: 'Контакты', url: '#contacts', size: 130 },
+                { title: 'Галерея', url: '#gallery', size: 110 },
+                { title: 'FAQ', url: '#faq', size: 90 }
+            ];
+            
+            // Создаем пузырьки
+            links.forEach((link, index) => {
+                const bubble = document.createElement('a');
+                bubble.className = 'bubble';
+                bubble.href = link.url;
+                
+                // Случайные параметры
+                const blur = Math.floor(Math.random() * 10) + 2;
+                const color = colors[Math.floor(Math.random() * colors.length)];
+                const left = Math.random() * (window.innerWidth - link.size);
+                const top = Math.random() * (window.innerHeight - link.size);
+                const animationDuration = Math.random() * 10 + 10;
+                const animationDelay = Math.random() * 5;
+                
+                // Применяем стили
+                bubble.style.width = `${link.size}px`;
+                bubble.style.height = `${link.size}px`;
+                bubble.style.left = `${left}px`;
+                bubble.style.top = `${top}px`;
+                bubble.style.background = color;
+                bubble.style.filter = `blur(${blur}px)`;
+                bubble.style.animation = `float ${animationDuration}s ease-in-out ${animationDelay}s infinite`;
+                
+                // Добавляем контент
+                bubble.innerHTML = `<div class="bubble-content">${link.title}</div>`;
+                
+                container.appendChild(bubble);
+            });
+            
+            // Делаем пузырьки интерактивными
+            const bubbles = document.querySelectorAll('.bubble');
+            
+            bubbles.forEach(bubble => {
+                // Случайное движение при наведении
+                bubble.addEventListener('mouseenter', function() {
+                    const x = (Math.random() - 0.5) * 20;
+                    const y = (Math.random() - 0.5) * 20;
+                    this.style.transform = `translate(${x}px, ${y}px) scale(1.1)`;
+                });
+                
+                bubble.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translate(0, 0) scale(1)';
+                });
+            });
+            
+            // Перемешиваем пузырьки при изменении размера окна
+            window.addEventListener('resize', function() {
+                bubbles.forEach(bubble => {
+                    const size = parseInt(bubble.style.width);
+                    const left = Math.random() * (window.innerWidth - size);
+                    const top = Math.random() * (window.innerHeight - size);
+                    bubble.style.left = `${left}px`;
+                    bubble.style.top = `${top}px`;
+                });
+            });
+        });
+    </script>
+</body>
+</html>
